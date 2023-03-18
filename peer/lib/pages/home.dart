@@ -25,8 +25,8 @@ class HomePage extends StatelessWidget {
               children: [
                 LayoutBuilder(
                   builder: (BuildContext context, BoxConstraints constraints) {
-                    return Image.network(
-                      'https://raw.githubusercontent.com/Kasneci-Lab/AI-assisted-writing/ui/img/Peer_logo.png',
+                    return Image.asset(
+                      'assets/images/Peer_logo.png',
                       width: constraints.maxWidth,
                       fit: BoxFit.cover,
                     );
