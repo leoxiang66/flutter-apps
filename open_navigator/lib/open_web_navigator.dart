@@ -9,7 +9,7 @@ class OpenWebNavigator extends StatefulWidget {
   final Color inactiveColor;
   final Widget? logo;
 
-  OpenWebNavigator({
+  const OpenWebNavigator({super.key, 
     required this.items,
     this.onTap,
     this.initialIndex = 0,

@@ -17,7 +17,7 @@ class OpenMobileNavigator extends StatefulWidget {
   /// [primaryColor] is the color for the selected item.
   /// [decorationColor] is the color for the background decoration.
   /// [inactiveColor] is the color for the non-selected items.
-  OpenMobileNavigator({
+  const OpenMobileNavigator({super.key, 
     required this.items,
     this.onTap,
     this.initialIndex = 0,
@@ -45,11 +45,11 @@ class _OpenMobileNavigatorState extends State<OpenMobileNavigator> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       height: 60.0,
       decoration: BoxDecoration(
         color: widget.decorationColor,
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Colors.black12,
             blurRadius: 5.0,
