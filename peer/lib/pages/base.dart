@@ -53,8 +53,10 @@ class BasePage extends StatelessWidget {
 
     OpenMobileNavigator bottomNavigationBar = OpenMobileNavigator(
       items: [
-        OpenMobileNavigatorItem(icon: Icons.home, title: "Home"),
-        OpenMobileNavigatorItem(icon: Icons.hail, title: "hello")
+        OpenMobileNavigatorItem(icon: Icons.home, title: "Home", onTap: () => go_to_internal_page(context, const HomePage()),),
+        OpenMobileNavigatorItem(icon: Icons.hail, title: "hello", onTap: () {
+          
+        },)
       ],
     );
 
