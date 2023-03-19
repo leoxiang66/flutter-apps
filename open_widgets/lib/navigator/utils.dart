@@ -1,6 +1,7 @@
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import '../logger.dart' show logger;
 
 void go_to_internal_page(BuildContext context, Widget page) {
   Navigator.pushReplacement(
@@ -22,8 +23,8 @@ Future<void> go_to_url(String url) async {
   try {
     await launchUrl(_url);
   } on PlatformException catch (e) {
-    print('无法打开 URL，错误信息：$e');
+    logger.e('无法打开 URL，错误信息：$e');
   } on UnsupportedError catch (e) {
-    print('不支持的平台，错误信息：$e');
+    logger.e('不支持的平台，错误信息：$e');
   }
 }

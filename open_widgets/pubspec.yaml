@@ -1,6 +1,6 @@
 name: open_widgets
 description: A package that implements widgets for mobile and web.
-version: 0.1.0
+version: 0.2.0
 homepage:
 
 environment:
@@ -11,12 +11,13 @@ dependencies:
   flutter:
     sdk: flutter
   url_launcher: ^6.1.10
+  logger: ^1.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-
+  
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
