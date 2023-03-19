@@ -61,10 +61,12 @@ class _OpenMobileNavigatorState extends State<OpenMobileNavigator> {
           int index = widget.items.indexOf(item);
           return GestureDetector(
             onTap: () {
+              item.onTap();
+              
               setState(() {
                 currentIndex = index;
               });
-              item.onTap();
+              
             },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
