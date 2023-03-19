@@ -1,8 +1,12 @@
+import 'scroll.dart';
 import 'package:flutter/material.dart';
 import '../blogs/blog1.dart';
 import '../blogs/base.dart';
 import '../blogs/blog2.dart';
 import '../blogs/blog3.dart';
+import '../blogs/blog4.dart';
+import '../blogs/blog5.dart';
+import '../blogs/blog6.dart';
 import 'base.dart';
 
 class BlogPage extends StatefulWidget {
@@ -42,12 +46,28 @@ class _BlogPageState extends State<BlogPage> {
             onNextPage: nextPage,
             onPreviousPage: previousPage,
           ),
-          Footer(),
         ],
       ),
     );
 
-    return BasePage(singleChildScrollView: singleChildScrollView);
+    return BasePage(
+        widgets: DynMouseScroll(
+            builder: (context, controller, physics) => SingleChildScrollView(
+                  controller: controller,
+                  physics: physics,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        BlogView(
+                          currentPage: currentPage,
+                          onNextPage: nextPage,
+                          onPreviousPage: previousPage,
+                        ),
+                      ],
+                    ),
+                  ),
+                )));
   }
 }
 
@@ -60,6 +80,9 @@ class BlogView extends StatelessWidget {
     blog1,
     blog2,
     blog3,
+    blog4,
+    blog5,
+    blog6
     // Add more blogs here
   ];
 
@@ -72,13 +95,13 @@ class BlogView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-    width: MediaQuery.of(context).size.width * 0.5,
+      width: MediaQuery.of(context).size.width * 0.5,
       padding: EdgeInsets.all(16),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Align(
-           alignment: Alignment.topCenter, // 添加这一行
+            alignment: Alignment.topCenter, // 添加这一行
             child: ListView.builder(
               shrinkWrap: true, // Add this line
               physics: NeverScrollableScrollPhysics(), // Add this line
@@ -86,7 +109,13 @@ class BlogView extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 int blogIndex = (currentPage - 1) * blogsPerPage + index;
                 if (blogIndex < allBlogs.length) {
-                  return blogCard(context: context, blog: allBlogs[blogIndex]);
+                  return BlogCard(
+                    context: context,
+                    blog: allBlogs[blogIndex],
+                    onTap: () {
+                      allBlogs[blogIndex].build_page(context);
+                    },
+                  );
                 } else {
                   return SizedBox
                       .shrink(); // Do not display anything if there are no more blogs
@@ -98,15 +127,19 @@ class BlogView extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              ElevatedButton(
-                onPressed: onPreviousPage,
-                child: Text('上一页'),
-              ),
               SizedBox(width: 16),
-              ElevatedButton(
-                onPressed: onNextPage,
-                child: Text('下一页'),
-              ),
+              if (currentPage > 1)
+                ElevatedButton(
+                  onPressed: onPreviousPage,
+                  child: Text('上一页'),
+                ),
+              Spacer(),
+              if ((currentPage) * blogsPerPage < allBlogs.length)
+                ElevatedButton(
+                  onPressed: onNextPage,
+                  child: Text('下一页'),
+                ),
+              SizedBox(width: 16),
             ],
           ),
         ],
@@ -114,4 +147,3 @@ class BlogView extends StatelessWidget {
     );
   }
 }
-

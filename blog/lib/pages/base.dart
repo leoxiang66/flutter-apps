@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../blogs/base.dart';
 import 'blog.dart' show BlogPage;
 import '../utils.dart';
+import 'scroll.dart';
 
 class NavBar extends StatelessWidget {
   @override
@@ -55,10 +56,10 @@ class NavBar extends StatelessWidget {
 class BasePage extends StatelessWidget {
   const BasePage({
     super.key,
-    required this.singleChildScrollView,
+    required this.widgets,
   });
 
-  final SingleChildScrollView singleChildScrollView;
+  final DynMouseScroll widgets;
 
   @override
   Widget build(BuildContext context) {
@@ -68,66 +69,73 @@ class BasePage extends StatelessWidget {
         child: NavBar(),
       ),
       body: Container(
-      child: singleChildScrollView,
-      color: Color(0xfff7fafc),
+        child: widgets,
+        color: Color(0xfff7fafc),
       ),
-    );
-  }
-}
-
-class Footer extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16),
-      child: Center(
-        child: Text(
-          'Copyright © 2022-${DateTime.now().year}',
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+      bottomNavigationBar: Container(
+        height: 50,
+        // color: Colors.red,
+        child: Center(
+          child: Text(
+            "© 2022- ${DateTime.now().year} PEER",
+            style: TextStyle(
+              color: Colors.black,
+              // fontWeight: FontWeight.bold,
+              fontSize: 15,
+            ),
+          ),
         ),
-      ),
+    )
     );
   }
 }
 
-class blogCard extends StatelessWidget {
-  const blogCard({
-    super.key,
+
+
+class BlogCard extends StatelessWidget {
+  const BlogCard({
+    Key? key,
     required this.context,
-    required this.blog, 
-  });
+    required this.blog,
+    required this.onTap,
+  }) : super(key: key);
 
   final BuildContext context;
   final MyBlog blog;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       child: Card(
-       shape: RoundedRectangleBorder(
+        shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20.0),
         ),
         margin: EdgeInsets.symmetric(vertical: 8),
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                blog.title,
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(height: 8),
-              Text(
-                blog.date.toString(),
-                style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey),
-              ),
-              SizedBox(height: 8),
-              Text(blog.abstract),
-            ],
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20.0),
+          onTap: onTap,
+          child: Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  blog.title,
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  blog.date.toString(),
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.grey),
+                ),
+                SizedBox(height: 8),
+                Text(blog.abstract),
+              ],
+            ),
           ),
         ),
       ),

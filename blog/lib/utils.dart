@@ -15,7 +15,7 @@ Future<void> go_to_url(String url, LaunchMode mode) async {
 }
 
 void go_to_internal_page(BuildContext context, Widget page) {
-  Navigator.pushReplacement(
+  Navigator.push(
     context,
     PageRouteBuilder(
       pageBuilder: (BuildContext context, Animation<double> animation,
