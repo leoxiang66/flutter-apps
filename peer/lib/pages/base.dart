@@ -9,11 +9,13 @@ import 'about.dart' show AboutPage;
 class BasePage extends StatelessWidget {
   const BasePage({
     super.key,
+    this.naviBarIndex = 0,
     required this.singleChildScrollView,
     // required this.onMenuItemTapped
   });
 
   final SingleChildScrollView singleChildScrollView;
+  final int naviBarIndex;
   // final Function(int) onMenuItemTapped;
 
   @override
@@ -52,17 +54,18 @@ class BasePage extends StatelessWidget {
     );
 
     OpenMobileNavigator bottomNavigationBar = OpenMobileNavigator(
+      initialIndex: naviBarIndex,
       items: [
         OpenMobileNavigatorItem(
           icon: Icons.home,
           title: "Home",
-          onTap: () => go_to_internal_page(context, const HomePage()),
+          onTap: () => go_to_internal_page(context, const HomePage(naviBarIndex: 0,)),
         ),
         OpenMobileNavigatorItem(
           icon: Icons.people,
           title: "hello",
           onTap: () {
-            go_to_internal_page(context, const AboutPage());
+            go_to_internal_page(context, const AboutPage(naviBarIndex: 1,));
           },
         )
       ],

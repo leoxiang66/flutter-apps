@@ -5,7 +5,10 @@ import 'base.dart' show BasePage;
 class AboutPage extends StatelessWidget {
   const AboutPage({
     Key? key,
+    this.naviBarIndex = 0,
   }) : super(key: key);
+
+  final int naviBarIndex;
 
 
 
@@ -14,6 +17,7 @@ class AboutPage extends StatelessWidget {
     Size screenSize = MediaQuery.of(context).size;
     double imagePaddingValue = screenSize.width * 0.05; // Set image padding to 5% of screen width
     return BasePage(
+    naviBarIndex: naviBarIndex,
       singleChildScrollView: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.fromLTRB(imagePaddingValue, 0, imagePaddingValue, 0),
