@@ -53,27 +53,35 @@ class BasePage extends StatelessWidget {
 
     OpenMobileNavigator bottomNavigationBar = OpenMobileNavigator(
       items: [
-        OpenMobileNavigatorItem(icon: Icons.home, title: "Home", onTap: () => go_to_internal_page(context, const HomePage()),),
-        OpenMobileNavigatorItem(icon: Icons.hail, title: "hello", onTap: () {
-          
-        },)
+        OpenMobileNavigatorItem(
+          icon: Icons.home,
+          title: "Home",
+          onTap: () => go_to_internal_page(context, const HomePage()),
+        ),
+        OpenMobileNavigatorItem(
+          icon: Icons.people,
+          title: "hello",
+          onTap: () {
+            go_to_internal_page(context, const AboutPage());
+          },
+        )
       ],
     );
 
     var container = Container(
-        height: 50,
-        // color: Colors.red,
-        child: Center(
-          child: Text(
-            "© 2022- ${DateTime.now().year} PEER",
-            style: const TextStyle(
-              color: Colors.black,
-              // fontWeight: FontWeight.bold,
-              fontSize: 15,
-            ),
+      height: 50,
+      // color: Colors.red,
+      child: Center(
+        child: Text(
+          "© 2022- ${DateTime.now().year} PEER",
+          style: const TextStyle(
+            color: Colors.black,
+            // fontWeight: FontWeight.bold,
+            fontSize: 15,
           ),
         ),
-      );
+      ),
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('PEER', style: TextStyle(color: Colors.white)),
