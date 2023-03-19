@@ -63,7 +63,7 @@ class BasePage extends StatelessWidget {
         ),
         OpenMobileNavigatorItem(
           icon: Icons.people,
-          title: "hello",
+          title: "About",
           onTap: () {
             go_to_internal_page(context, const AboutPage(naviBarIndex: 1,));
           },
