@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 /// A custom mobile navigation bar with customizable appearance.
 class OpenMobileNavigator extends StatefulWidget {
   final List<OpenMobileNavigatorItem> items;
-  final ValueChanged<int>? onTap;
   final int initialIndex;
   final Color primaryColor;
   final Color decorationColor;
@@ -12,14 +11,13 @@ class OpenMobileNavigator extends StatefulWidget {
   /// Creates an OpenMobileNavigator with the given configuration.
   ///
   /// [items] is the list of navigation items.
-  /// [onTap] is an optional callback for handling item taps.
   /// [initialIndex] is the index of the initially selected item.
   /// [primaryColor] is the color for the selected item.
   /// [decorationColor] is the color for the background decoration.
   /// [inactiveColor] is the color for the non-selected items.
-  const OpenMobileNavigator({super.key, 
+  const OpenMobileNavigator({
+    super.key,
     required this.items,
-    this.onTap,
     this.initialIndex = 0,
     this.primaryColor = Colors.blue,
     this.decorationColor = Colors.white,
@@ -66,17 +64,16 @@ class _OpenMobileNavigatorState extends State<OpenMobileNavigator> {
               setState(() {
                 currentIndex = index;
               });
-              if (widget.onTap != null) {
-                widget.onTap!(index);
-              }
+              item.onTap();
             },
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(
                   item.icon,
-                  color:
-                      currentIndex == index ? widget.primaryColor : widget.inactiveColor,
+                  color: currentIndex == index
+                      ? widget.primaryColor
+                      : widget.inactiveColor,
                 ),
                 Text(
                   item.title,
@@ -95,12 +92,13 @@ class _OpenMobileNavigatorState extends State<OpenMobileNavigator> {
   }
 }
 
-
 /// Represents an item for the [OpenMobileNavigator] widget.
 class OpenMobileNavigatorItem {
   final IconData icon;
   final String title;
+  final VoidCallback onTap;
 
   /// Creates an OpenNavigatorItem with the given [icon] and [title].
-  OpenMobileNavigatorItem({required this.icon, required this.title});
+  OpenMobileNavigatorItem(
+      {required this.onTap, required this.icon, required this.title});
 }

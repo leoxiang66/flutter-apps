@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
 
 class OpenClickable extends StatelessWidget {
   final Widget child;
@@ -23,32 +22,33 @@ class OpenClickable extends StatelessWidget {
   }
 }
 
-class OpenCardClickable extends OpenClickable {
+class OpenCardClickable extends StatelessWidget {
   final Color hoverColor;
   final double width;
   final double height;
+  final Widget child;
+  final VoidCallback onClick;
 
   const OpenCardClickable({
     super.key,
-    required super.child,
-    required super.onClick,
+    required this.child,
+    required this.onClick,
     this.hoverColor = Colors.black12,
-    this.width=-1,
-    this.height=-1,
+    this.width = -1,
+    this.height = -1,
   });
 
   @override
   Widget build(BuildContext context) {
-  if (width != -1 && height != -1)
-      {
+    if (width != -1 && height != -1) {
       return SizedBox(
-        width: width , // 设置Card的宽度
+        width: width, // 设置Card的宽度
         height: height,
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
-          margin: EdgeInsets.symmetric(vertical: 8),
+          margin: const EdgeInsets.symmetric(vertical: 8),
           child: InkWell(
             hoverColor: hoverColor,
             onTap: onClick,
@@ -60,53 +60,45 @@ class OpenCardClickable extends OpenClickable {
           ),
         ),
       );
-    }
-
-  else if (width != -1){
-    return SizedBox(
-        width: width , // 设置Card的宽度
+    } else if (width != -1) {
+      return SizedBox(
+        width: width, // 设置Card的宽度
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
-          margin: EdgeInsets.symmetric(vertical: 8),
+          margin: const EdgeInsets.symmetric(vertical: 8),
           child: InkWell(
             hoverColor: hoverColor,
             onTap: onClick,
             borderRadius: BorderRadius.circular(20.0),
-            child: Center(
-            heightFactor: 1,
-            child: child),
+            child: Center(heightFactor: 1, child: child),
           ),
         ),
       );
-  }
-  else if (height!=-1){
-  return SizedBox(
+    } else if (height != -1) {
+      return SizedBox(
         height: height, // 设置Card的宽度
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
-          margin: EdgeInsets.symmetric(vertical: 8),
+          margin: const EdgeInsets.symmetric(vertical: 8),
           child: InkWell(
             hoverColor: hoverColor,
             onTap: onClick,
             borderRadius: BorderRadius.circular(20.0),
-            child: Center(
-            widthFactor: 1,
-            child: child),
+            child: Center(widthFactor: 1, child: child),
           ),
         ),
       );
-  }
-  else{
-  return SizedBox(
+    } else {
+      return SizedBox(
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
-          margin: EdgeInsets.symmetric(vertical: 8),
+          margin: const EdgeInsets.symmetric(vertical: 8),
           child: InkWell(
             hoverColor: hoverColor,
             onTap: onClick,
@@ -117,7 +109,6 @@ class OpenCardClickable extends OpenClickable {
           ),
         ),
       );
+    }
   }
-    
-}
 }

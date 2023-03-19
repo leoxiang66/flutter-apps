@@ -17,6 +17,9 @@ class OpenDrawer extends StatelessWidget {
     var drawheader_ = SizedBox(
       height: 60, // Set the desired height of the DrawerHeader
       child: DrawerHeader(
+        decoration:BoxDecoration(
+          color: primaryColor,
+        ),
         child: Center(
           child: Text(
             title,
@@ -25,9 +28,6 @@ class OpenDrawer extends StatelessWidget {
               fontWeight: FontWeight.bold, // Set the font weight to bold
             ),
           ),
-        ),
-        decoration:BoxDecoration(
-          color: this.primaryColor,
         ),
       ),
     );
