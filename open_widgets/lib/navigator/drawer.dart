@@ -53,7 +53,7 @@ class OpenDrawerItem extends StatelessWidget {
   });
 
   final Function onMenuItemTapped;
-  final Icon icon;
+  final Widget icon;
   final Text text;
 
   @override
