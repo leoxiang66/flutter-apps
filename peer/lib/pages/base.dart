@@ -78,7 +78,7 @@ class BasePage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('PEER', style: TextStyle(color: Colors.white)),
         centerTitle: true, // Center the AppBar title
-        backgroundColor: Colors.red, // Change the AppBar color to red
+        backgroundColor: Colors.blue, // Change the AppBar color to red
       ),
       drawer: mydrawer,
       body: singleChildScrollView,
