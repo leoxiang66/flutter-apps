@@ -2,18 +2,12 @@ import 'package:flutter/material.dart';
 import 'home.dart' show HomePage;
 import 'about.dart' show AboutPage;
 import 'package:open_widgets/navigator/drawer.dart';
-import 'package:open_widgets/navigator/utils.dart';
+import 'package:open_widgets/navigator/utils.dart' show go_to_internal_page;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 
 
-OpenDrawer mydrawer = OpenDrawer(title: "PEER",items: [
-OpenDrawerItem(icon: FaIcon(FontAwesomeIcons.home,color: Colors.black,),text:Text('Home'),onMenuItemTapped: ()=>{
 
-
-},)
-
-],)
 
 
 // class Drawer_ extends StatelessWidget {

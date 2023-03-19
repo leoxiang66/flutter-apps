@@ -5,16 +5,15 @@ import 'base.dart' show BasePage;
 class AboutPage extends StatelessWidget {
   const AboutPage({
     Key? key,
-    required this.onMenuItemTapped
   }) : super(key: key);
 
-  final Function(int) onMenuItemTapped;
+
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     double imagePaddingValue = screenSize.width * 0.05; // Set image padding to 5% of screen width
-    return BasePage(onMenuItemTapped: onMenuItemTapped,
+    return BasePage(
       singleChildScrollView: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.fromLTRB(imagePaddingValue, 0, imagePaddingValue, 0),

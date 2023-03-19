@@ -4,9 +4,9 @@ import 'base.dart' show BasePage;
 class HomePage extends StatelessWidget {
   const HomePage({
     super.key,
-    required this.onMenuItemTapped
+    // required this.onMenuItemTapped
   });
-  final Function(int) onMenuItemTapped;
+  // final Function(int) onMenuItemTapped;
 
 
   @override
@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
     Size screenSize = MediaQuery.of(context).size;
     double imagePaddingValue = screenSize.width * 0.05; // Set image padding to 5% of screen width
 
-    return BasePage(onMenuItemTapped: onMenuItemTapped,singleChildScrollView: SingleChildScrollView(
+    return BasePage(singleChildScrollView: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.fromLTRB(imagePaddingValue, 0, imagePaddingValue, 0), // Set top and bottom padding to 0
           child: Align(

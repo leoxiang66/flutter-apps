@@ -13,45 +13,45 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'PEER - Paper Evaluation and Empowerment Resource',
-      home: MyHomePage(),
+      home: HomePage(),
     );
   }
 }
 
 /// This is the home page widget of the app.
-class MyHomePage extends StatefulWidget {
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+// class MyHomePage extends StatefulWidget {
+//   @override
+//   State<MyHomePage> createState() => _MyHomePageState();
+// }
 
-class _MyHomePageState extends State<MyHomePage> {
-  var selectedIndex = 0;
+// class _MyHomePageState extends State<MyHomePage> {
+//   var selectedIndex = 0;
 
-  void handleMenuItemTapped(int index) {
-    setState(() {
-      selectedIndex = index;
-    });
-  }
+//   void handleMenuItemTapped(int index) {
+//     setState(() {
+//       selectedIndex = index;
+//     });
+//   }
 
-  @override
-  Widget build(BuildContext context) {
+//   @override
+//   Widget build(BuildContext context) {
     
 
-    Widget page;
-      switch (selectedIndex) {
-        case 0:
-          page = HomePage(onMenuItemTapped: handleMenuItemTapped,);
-          break;
-        case 1:
-          page = AboutPage(onMenuItemTapped: handleMenuItemTapped,);
-          break;
-        default:
-          throw UnimplementedError('no widget for $selectedIndex');
-      } 
+//     Widget page;
+//       switch (selectedIndex) {
+//         case 0:
+//           page = HomePage();
+//           break;
+//         case 1:
+//           page = AboutPage(onMenuItemTapped: handleMenuItemTapped,);
+//           break;
+//         default:
+//           throw UnimplementedError('no widget for $selectedIndex');
+//       } 
 
-    return page;
-  }
-}
+//     return page;
+//   }
+// }
 
 
 
