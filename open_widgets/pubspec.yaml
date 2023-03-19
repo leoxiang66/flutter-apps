@@ -1,6 +1,6 @@
-name: open_navigator
-description: A package that implements navigator widgets for mobile and web.
-version: 0.0.1
+name: open_widgets
+description: A package that implements widgets for mobile and web.
+version: 0.1.0
 homepage:
 
 environment:
@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  url_launcher: ^6.1.10
 
 dev_dependencies:
   flutter_test:
@@ -52,4 +53,4 @@ flutter:
   #
   # For details regarding fonts in packages, see
   # https://flutter.dev/custom-fonts/#from-packages
-repository: https://github.com/leoxiang66/flutterapps/tree/navigator
+repository: https://github.com/leoxiang66/flutterapps/tree/open_widgets
