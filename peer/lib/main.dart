@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'pages/home.dart' show HomePage;
-import 'pages/about.dart' show AboutPage;
+import 'package:provider/provider.dart';
+import 'states/essay.dart' show EssayState;
 
 /// This is the main function of the app.
 void main() {
@@ -11,9 +12,12 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'PEER - Paper Evaluation and Empowerment Resource',
-      home: HomePage(),
+    return ChangeNotifierProvider(
+    create: (context) => EssayState(),
+      child: MaterialApp(
+        title: 'PEER - Paper Evaluation and Empowerment Resource',
+        home: HomePage(),
+      ),
     );
   }
 }

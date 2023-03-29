@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:open_widgets/input/text_input.dart' show OpenTextInput;
+import 'package:open_widgets/input/dropdown.dart' show OpenDropdown;
+import 'package:peer/states/essay.dart' show EssayState;
+import '../../states/utils.dart' show essay_info_complete;
+import '../../states/utils.dart';
 import '../base.dart' show BasePage;
 
 class ChooseIPMPage extends StatelessWidget {
@@ -15,6 +20,13 @@ class ChooseIPMPage extends StatelessWidget {
     Size screenSize = MediaQuery.of(context).size;
     double imagePaddingValue =
         screenSize.width * 0.05; // Set image padding to 5% of screen width
+    var sizedBox = SizedBox(
+      height: imagePaddingValue,
+    );
+    var content_max_width = screenSize.width * 0.8;
+    var essayState = context.watch<EssayState>();
+  
+    
     return BasePage(
       naviBarIndex: naviBarIndex,
       singleChildScrollView: SingleChildScrollView(
@@ -27,7 +39,7 @@ class ChooseIPMPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: imagePaddingValue),
+                sizedBox,
                 Text(
                   'Insert Essay',
                   style: TextStyle(
@@ -35,19 +47,78 @@ class ChooseIPMPage extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: imagePaddingValue),
+                sizedBox,
                 OpenTextInput(
                     onSubmitted: (text) {
                       print(text);
+                      essayState.setEssayTitle(text);
                     },
                     onChanged: (text) {},
                     label: 'Title of  Essay',
-                    width: screenSize.width * 0.8),
-                SizedBox(height: imagePaddingValue),
-                Text(
-                  'Tao is an accomplished software engineer and researcher with a strong background in artificial intelligence and machine learning. He has worked on numerous cutting-edge projects and has a proven track record of delivering high-quality results. Tao is passionate about empowering others through technology and is dedicated to creating tools that make a positive impact on people\'s lives. When he\'s not coding or working on new ideas, Tao enjoys hiking, photography, and exploring new places.',
+                    width: content_max_width),
+                sizedBox,
+                SizedBox(
+                  width: content_max_width,
+                  child: Row(
+                    children: [
+                      OpenDropdown(
+                          hint: 'Essay Type',
+                          items: ['o1'],
+                          onChanged: (text) {
+                            print(text);
+                            essayState.setEssayType(text);
+                          },
+                          width: content_max_width / 3),
+                      Expanded(child: SizedBox()),
+                      OpenDropdown(
+                          hint: 'Study Year',
+                          items: ['o1'],
+                          onChanged: (text) {
+                            print(text);
+                            essayState.setStudyYear(text);
+                          },
+                          width: content_max_width / 3),
+                    ],
+                  ),
                 ),
-                SizedBox(height: imagePaddingValue),
+                sizedBox,
+                essayState.essay_info_complete()
+                    ? SizedBox(
+                        width: content_max_width,
+                        child: Column(
+                          children: [
+                            sizedBox,
+                            Text(
+                              "How do you want to upload your essay?",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            sizedBox,
+                            Row(
+                              children: [
+                                ElevatedButton(
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                Colors.lightBlueAccent)),
+                                    onPressed: () {
+                                      print('manually enter essay...');
+                                    },
+                                    child: Text("Manually Enter")),
+                                Expanded(child: SizedBox()),
+                                ElevatedButton(
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateProperty.all<Color>(
+                                                Colors.lightBlueAccent)),
+                                    onPressed: () {
+                                      print('upload photo...');
+                                    },
+                                    child: Text("Upload photo")),
+                              ],
+                            )
+                          ],
+                        ))
+                    : SizedBox()
               ],
             ),
           ),
