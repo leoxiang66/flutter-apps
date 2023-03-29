@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:open_widgets/input/text_input.dart' show OpenTextInput;
 import '../base.dart' show BasePage;
 
 class ChooseIPMPage extends StatelessWidget {
@@ -35,9 +36,13 @@ class ChooseIPMPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: imagePaddingValue),
-                Text(
-                  'Kathrin is a seasoned researcher and writer with a passion for helping others achieve their academic and professional goals. With years of experience in the field, she has a deep understanding of the challenges faced by researchers and students, and she is committed to creating innovative solutions that address these issues. In her free time, Kathrin enjoys reading, traveling, and spending time with her family.',
-                ),
+                OpenTextInput(
+                    onSubmitted: (text) {
+                      print(text);
+                    },
+                    onChanged: (text) {},
+                    label: 'Title of  Essay',
+                    width: screenSize.width * 0.8),
                 SizedBox(height: imagePaddingValue),
                 Text(
                   'Tao is an accomplished software engineer and researcher with a strong background in artificial intelligence and machine learning. He has worked on numerous cutting-edge projects and has a proven track record of delivering high-quality results. Tao is passionate about empowering others through technology and is dedicated to creating tools that make a positive impact on people\'s lives. When he\'s not coding or working on new ideas, Tao enjoys hiking, photography, and exploring new places.',
