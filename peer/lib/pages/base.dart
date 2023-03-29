@@ -3,6 +3,8 @@ import 'package:open_widgets/navigator/drawer.dart';
 import 'package:open_widgets/navigator/mobile_navigator.dart';
 import 'package:open_widgets/navigator/utils.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:peer/states/essay.dart';
+import 'package:provider/provider.dart';
 import 'home.dart' show HomePage;
 import 'about.dart' show AboutPage;
 
@@ -20,6 +22,8 @@ class BasePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var essaystate = context.watch<EssayState>();
+
     OpenDrawer mydrawer = OpenDrawer(
       title: "PEER",
       items: [
@@ -29,8 +33,10 @@ class BasePage extends StatelessWidget {
             color: Colors.black,
           ),
           text: const Text('Home'),
-          onMenuItemTapped: () =>
-              {go_to_internal_page(context, const HomePage())},
+          onMenuItemTapped: () {
+            go_to_internal_page(context, const HomePage());
+            essaystate.setDefault();
+          },
         ),
         OpenDrawerItem(
           icon: const FaIcon(
@@ -59,13 +65,25 @@ class BasePage extends StatelessWidget {
         OpenMobileNavigatorItem(
           icon: Icons.home,
           title: "Home",
-          onTap: () => go_to_internal_page(context, const HomePage(naviBarIndex: 0,)),
+          onTap: () {
+            go_to_internal_page(
+                context,
+                const HomePage(
+                  naviBarIndex: 0,
+                ));
+
+            essaystate.setDefault();
+          },
         ),
         OpenMobileNavigatorItem(
           icon: Icons.people,
           title: "About",
           onTap: () {
-            go_to_internal_page(context, const AboutPage(naviBarIndex: 1,));
+            go_to_internal_page(
+                context,
+                const AboutPage(
+                  naviBarIndex: 1,
+                ));
           },
         )
       ],

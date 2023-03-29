@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:open_widgets/input/text_input.dart' show OpenTextInput;
 import 'package:open_widgets/input/dropdown.dart' show OpenDropdown;
+import 'package:open_widgets/notification/snackbar.dart';
 import 'package:peer/states/essay.dart' show EssayState;
 import '../../states/utils.dart' show essay_info_complete;
 import '../../states/utils.dart';
@@ -25,8 +26,8 @@ class ChooseIPMPage extends StatelessWidget {
     );
     var content_max_width = screenSize.width * 0.8;
     var essayState = context.watch<EssayState>();
-  
-    
+
+
     return BasePage(
       naviBarIndex: naviBarIndex,
       singleChildScrollView: SingleChildScrollView(
@@ -52,6 +53,8 @@ class ChooseIPMPage extends StatelessWidget {
                     onSubmitted: (text) {
                       print(text);
                       essayState.setEssayTitle(text);
+                      show_snackbar_notification(
+                          context, 'Essay title saved.', 'dismiss', () {});
                     },
                     onChanged: (text) {},
                     label: 'Title of  Essay',
@@ -67,6 +70,8 @@ class ChooseIPMPage extends StatelessWidget {
                           onChanged: (text) {
                             print(text);
                             essayState.setEssayType(text);
+                            show_snackbar_notification(
+                                context, 'Essay type saved.', 'dismiss', () {});
                           },
                           width: content_max_width / 3),
                       Expanded(child: SizedBox()),
@@ -76,6 +81,8 @@ class ChooseIPMPage extends StatelessWidget {
                           onChanged: (text) {
                             print(text);
                             essayState.setStudyYear(text);
+                            show_snackbar_notification(
+                                context, 'Study year saved.', 'dismiss', () {});
                           },
                           width: content_max_width / 3),
                     ],

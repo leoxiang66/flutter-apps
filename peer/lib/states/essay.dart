@@ -27,4 +27,10 @@ class EssayState extends ChangeNotifier {
   bool essay_info_complete() {
     return _essayTitle != '' && _essayType != '' && _studyYear != '';
   }
+
+  void setDefault() {
+    _essayTitle = '';
+    _essayType = '';
+    _studyYear = "";
+  }
 }
