@@ -26,7 +26,7 @@ class ChooseIPMPage extends StatelessWidget {
     var essayState = context.watch<EssayState>();
     GlobalKey<OpenTextInputState> essayContentKey = GlobalKey();
     var essayContentInput = OpenTextInput(
-                                key: essayContentKey,
+                                // key: essayContentKey,
                                 defaultValue: essayState.essayContent,
                                 minLines: 20,
                                 maxLines: null,
