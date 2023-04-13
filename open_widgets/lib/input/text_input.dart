@@ -9,6 +9,7 @@ class OpenTextInput extends StatefulWidget {
   final int? maxLines;
   final String placeholder;
   final String? defaultValue;
+  final ValueNotifier<String>? clearNotifier;
 
   OpenTextInput({
     Key? key,
@@ -20,6 +21,7 @@ class OpenTextInput extends StatefulWidget {
     this.maxLines = 1,
     this.placeholder = '',
     this.defaultValue,
+    this.clearNotifier,
   }) : super(key: key);
 
   @override
@@ -43,8 +45,12 @@ class OpenTextInputState extends State<OpenTextInput> {
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.defaultValue); // 设置默认值
+    widget.clearNotifier?.addListener(() {
+      if (widget.clearNotifier?.value == "") {
+        clearInput();
+      }
+    });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -61,9 +67,11 @@ class OpenTextInputState extends State<OpenTextInput> {
         ),
         onChanged: (value) {
           widget.onChanged(value);
+          widget.clearNotifier?.value = value;
         },
         onSubmitted: (value) {
           widget.onSubmitted(value);
+          widget.clearNotifier?.value = value;
         },
       ),
     );
