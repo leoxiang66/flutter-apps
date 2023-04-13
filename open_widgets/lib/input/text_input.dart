@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
-class OpenTextInput extends StatefulWidget {
+abstract class OpenTextInputState {
+  void clearInput();
+}
+
+class OpenTextInput extends StatefulWidget  {
   final void Function(String) onSubmitted;
   final void Function(String) onChanged;
   final String label;
@@ -9,7 +13,6 @@ class OpenTextInput extends StatefulWidget {
   final int? maxLines;
   final String placeholder;
   final String? defaultValue;
-  void Function()? clearInput;
 
   OpenTextInput({
     Key? key,
@@ -21,17 +24,17 @@ class OpenTextInput extends StatefulWidget {
     this.maxLines = 1,
     this.placeholder = '',
     this.defaultValue,
-    this.clearInput,
   }) : super(key: key);
 
   @override
   _OpenTextInputState createState() => _OpenTextInputState();
 }
 
-class _OpenTextInputState extends State<OpenTextInput> {
+class _OpenTextInputState extends State<OpenTextInput> implements OpenTextInputState{
   late TextEditingController _controller;
 
-  void _clearInput() {
+  @override
+  void clearInput() {
     _controller.clear(); // 清空输入框
   }
 
@@ -39,7 +42,6 @@ class _OpenTextInputState extends State<OpenTextInput> {
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.defaultValue); // 设置默认值
-    widget.clearInput = _clearInput; // 将清除功能分配给回调
   }
 
   @override
