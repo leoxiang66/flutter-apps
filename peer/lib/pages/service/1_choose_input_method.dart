@@ -24,30 +24,30 @@ class ChooseIPMPage extends StatelessWidget {
     );
     var content_max_width = screenSize.width * 0.8;
     var essayState = context.watch<EssayState>();
-    GlobalKey<OpenTextInputState> essayContentKey = GlobalKey();
+    final ValueNotifier<String> clearNotifier = ValueNotifier('');
     var essayContentInput = OpenTextInput(
-                                // key: essayContentKey,
-                                defaultValue: essayState.essayContent,
-                                minLines: 20,
-                                maxLines: null,
-                                placeholder: "Enter your essay here...",
-                                onSubmitted: (text) {
-                                  essayState.setEssayContent(text);
-                                  show_snackbar_notification(context,
-                                      'Essay content saved.', 'dismiss', () {});
-                                },
-                                onChanged: (text) {
-                                  if (text == '') {
-                                    essayState.setPhotoInput();
-                                  } else {
-                                    essayState.setTextInput();
-                                  }
+      clearNotifier: clearNotifier,
+      // defaultValue: essayState.essayContent,
+      // minLines: 20,
+      // maxLines: null,
+      placeholder: "Enter your essay here...",
+      onSubmitted: (text) {
+        essayState.setEssayContent(text);
+        show_snackbar_notification(
+            context, 'Essay content saved.', 'dismiss', () {});
+      },
+      onChanged: (text) {
+        if (text == '') {
+          essayState.setPhotoInput();
+        } else {
+          essayState.setTextInput();
+        }
 
-                                  essayState.setEssayContent(text);
-                                },
-                                label: '',
-                                width: content_max_width,
-                              );
+        essayState.setEssayContent(text);
+      },
+      label: '',
+      width: content_max_width,
+    );
     return BasePage(
       naviBarIndex: naviBarIndex,
       singleChildScrollView: SingleChildScrollView(
@@ -149,8 +149,8 @@ class ChooseIPMPage extends StatelessWidget {
                                           message: "Clear",
                                           child: IconButton(
                                               onPressed: () {
-                                                essayState.setEssayContent("");
-                                                
+                                                clearNotifier.value = '';
+                                                // essayState.setEssayContent("");
                                               },
                                               icon: Icon(Icons.clear))),
                                       Tooltip(
