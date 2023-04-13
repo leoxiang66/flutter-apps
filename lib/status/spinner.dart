@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class Spinner extends StatelessWidget {
   final Future<dynamic> work;
-  final void Function(dynamic) onFinished;
+  final Widget Function(dynamic) onFinished;
 
   const Spinner({super.key, required this.work, required this.onFinished});
 
@@ -18,8 +18,7 @@ class Spinner extends StatelessWidget {
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
-            onFinished(snapshot.data);
-            return const SizedBox(); // 显示结果
+            return onFinished(snapshot.data); // 显示结果
           }
         }
       },
