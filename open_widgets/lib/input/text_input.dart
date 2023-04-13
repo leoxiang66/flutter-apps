@@ -27,13 +27,24 @@ class OpenTextInput extends StatefulWidget {
 }
 
 class OpenTextInputState extends State<OpenTextInput> {
-  final TextEditingController _controller = TextEditingController();
+  late TextEditingController _controller;
+
+  void clearInput() {
+    _controller.clear(); // 清空输入框
+  }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.defaultValue); // 设置默认值
+  }
+
 
   @override
   Widget build(BuildContext context) {
