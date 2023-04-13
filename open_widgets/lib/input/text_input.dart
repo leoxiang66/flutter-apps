@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class OpenTextInput extends StatelessWidget {
+class OpenTextInput extends StatefulWidget {
   final void Function(String) onSubmitted;
   final void Function(String) onChanged;
   final String label;
@@ -9,10 +9,10 @@ class OpenTextInput extends StatelessWidget {
   final int? maxLines;
   final String placeholder;
   final String? defaultValue;
-  final TextEditingController _controller;
+  void Function()? clearInput;
 
   OpenTextInput({
-    Key? key,
+    super.key,
     required this.onSubmitted,
     required this.onChanged,
     required this.label,
@@ -21,31 +21,51 @@ class OpenTextInput extends StatelessWidget {
     this.maxLines = 1,
     this.placeholder = '',
     this.defaultValue,
-  })  : _controller = TextEditingController(text: defaultValue),
-        super(key: key);
+    this.clearInput,
+  });
 
-  void clearInput() {
+  @override
+  _OpenTextInputState createState() => _OpenTextInputState();
+}
+
+class _OpenTextInputState extends State<OpenTextInput> {
+  late TextEditingController _controller;
+
+  void _clearInput() {
     _controller.clear(); // 清空输入框
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.defaultValue); // 设置默认值
+    widget.clearInput = _clearInput; // 将清除功能分配给回调
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width,
+      width: widget.width,
       child: TextField(
-        minLines: minLines,
-        maxLines: maxLines,
+        minLines: widget.minLines,
+        maxLines: widget.maxLines,
         controller: _controller,
         decoration: InputDecoration(
-          hintText: placeholder,
-          labelText: label,
+          hintText: widget.placeholder,
+          labelText: widget.label,
           border: const OutlineInputBorder(),
         ),
         onChanged: (value) {
-          onChanged(value);
+          widget.onChanged(value);
         },
         onSubmitted: (value) {
-          onSubmitted(value);
+          widget.onSubmitted(value);
         },
       ),
     );
