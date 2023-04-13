@@ -24,7 +24,10 @@ class ChooseIPMPage extends StatelessWidget {
     );
     var content_max_width = screenSize.width * 0.8;
     var essayState = context.watch<EssayState>();
-    final ValueNotifier<String> clearNotifier = ValueNotifier('');
+    final ValueNotifier<String> clearNotifier = ValueNotifier("None");
+    clearNotifier.addListener(() {
+      print('Value changeds');
+    });
     var essayContentInput = OpenTextInput(
       clearNotifier: clearNotifier,
       // defaultValue: essayState.essayContent,
@@ -149,7 +152,9 @@ class ChooseIPMPage extends StatelessWidget {
                                           message: "Clear",
                                           child: IconButton(
                                               onPressed: () {
+                                                print('clicked');
                                                 clearNotifier.value = '';
+                                                print('done');
                                                 // essayState.setEssayContent("");
                                               },
                                               icon: Icon(Icons.clear))),
