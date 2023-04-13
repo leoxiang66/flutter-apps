@@ -25,6 +25,28 @@ class ChooseIPMPage extends StatelessWidget {
     var content_max_width = screenSize.width * 0.8;
     var essayState = context.watch<EssayState>();
 
+    var essayContentInput = OpenTextInput(
+                                defaultValue: essayState.essayContent,
+                                minLines: 20,
+                                maxLines: null,
+                                placeholder: "Enter your essay here...",
+                                onSubmitted: (text) {
+                                  essayState.setEssayContent(text);
+                                  show_snackbar_notification(context,
+                                      'Essay content saved.', 'dismiss', () {});
+                                },
+                                onChanged: (text) {
+                                  if (text == '') {
+                                    essayState.setPhotoInput();
+                                  } else {
+                                    essayState.setTextInput();
+                                  }
+
+                                  essayState.setEssayContent(text);
+                                },
+                                label: '',
+                                width: content_max_width,
+                              );
     return BasePage(
       naviBarIndex: naviBarIndex,
       singleChildScrollView: SingleChildScrollView(
@@ -87,30 +109,10 @@ class ChooseIPMPage extends StatelessWidget {
                 sizedBox,
                 essayState.essay_info_complete()
                     ? Column(
-                      children: [
-                        Stack(
+                        children: [
+                          Stack(
                             children: [
-                              OpenTextInput(
-                                minLines: 20,
-                                maxLines: null,
-                                placeholder: "Enter your essay here...",
-                                onSubmitted: (text) {
-                                  essayState.setEssayContent(text);
-                                  show_snackbar_notification(context,
-                                      'Essay content saved.', 'dismiss', () {});
-                                },
-                                onChanged: (text) {
-                                  if (text == '') {
-                                    essayState.setPhotoInput();
-                                  } else {
-                                    essayState.setTextInput();
-                                  }
-
-                                  essayState.setEssayContent(text);
-                                },
-                                label: '',
-                                width: content_max_width,
-                              ),
+                              essayContentInput,
                               Positioned(
                                 bottom: 15, // 调整按钮距离底部的位置
                                 right: 15, // 调整按钮距离右侧的位置
@@ -121,12 +123,12 @@ class ChooseIPMPage extends StatelessWidget {
                                         ? "Upload photos instead"
                                         : '',
                                     child: IconButton(
-                                      icon: Icon(Icons.photo_album), // 将此处替换为您想要的图标
+                                      icon: Icon(
+                                          Icons.photo_album), // 将此处替换为您想要的图标
                                       onPressed: () {
                                         // 在这里处理图像上传或拍照操作
                                         if (!essayState.textInput) {
                                           // todo
-                                          
                                         }
                                       },
                                     ),
@@ -135,27 +137,34 @@ class ChooseIPMPage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 25.0,vertical: 20),
-                            child: Row(
-                              mainAxisAlignment:MainAxisAlignment.end,
-                              children: [
-                                Tooltip(
-                                message: "Clear",
-                                child: IconButton(onPressed: (){}, icon: Icon(Icons.clear))),
-
-                                Tooltip(
-                                message: "Submit",
-                                  child: IconButton(
-                                      onPressed: () {}, icon: Icon(Icons.done_all)),
+                          essayState.essayContent != ''
+                              ? Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 25.0, vertical: 20),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Tooltip(
+                                          message: "Clear",
+                                          child: IconButton(
+                                              onPressed: () {
+                                                essayState.setEssayContent("");
+                                                
+                                              },
+                                              icon: Icon(Icons.clear))),
+                                      Tooltip(
+                                        message: "Submit",
+                                        child: IconButton(
+                                            onPressed: () {},
+                                            icon: Icon(Icons.done_all)),
+                                      )
+                                    ],
+                                  ),
                                 )
-                              ],
-                            ),
-                          )
-                      ],
-                    )
+                              : SizedBox(),
+                        ],
+                      )
                     : const SizedBox(),
-                    
               ],
             ),
           ),
