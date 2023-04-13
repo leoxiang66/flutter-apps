@@ -8,6 +8,7 @@ class OpenTextInput extends StatefulWidget {
   final int minLines;
   final int? maxLines;
   final String placeholder;
+  final String? defaultValue;
 
   const OpenTextInput({
     super.key,
@@ -18,6 +19,7 @@ class OpenTextInput extends StatefulWidget {
     this.minLines = 1,
     this.maxLines = 1,
     this.placeholder = '',
+    this.defaultValue,
   });
 
   @override
@@ -25,7 +27,13 @@ class OpenTextInput extends StatefulWidget {
 }
 
 class _OpenTextInputState extends State<OpenTextInput> {
-  final TextEditingController _controller = TextEditingController();
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.defaultValue); // 设置默认值
+  }
 
   @override
   void dispose() {
