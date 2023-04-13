@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
-class OpenTextInput extends StatefulWidget {
+abstract class OpenTextInputState {
+  void clearInput();
+}
+
+class OpenTextInput extends StatefulWidget  {
   final void Function(String) onSubmitted;
   final void Function(String) onChanged;
   final String label;
@@ -23,12 +27,13 @@ class OpenTextInput extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  OpenTextInputState createState() => OpenTextInputState();
+  _OpenTextInputState createState() => _OpenTextInputState();
 }
 
-class OpenTextInputState extends State<OpenTextInput> {
+class _OpenTextInputState extends State<OpenTextInput> implements OpenTextInputState{
   late TextEditingController _controller;
 
+  @override
   void clearInput() {
     _controller.clear(); // 清空输入框
   }
