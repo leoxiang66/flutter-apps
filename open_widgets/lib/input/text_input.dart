@@ -9,8 +9,9 @@ class OpenTextInput extends StatefulWidget {
   final int? maxLines;
   final String placeholder;
   final String? defaultValue;
+  void Function()? clearInput;
 
-  const OpenTextInput({
+  OpenTextInput({
     super.key,
     required this.onSubmitted,
     required this.onChanged,
@@ -20,6 +21,7 @@ class OpenTextInput extends StatefulWidget {
     this.maxLines = 1,
     this.placeholder = '',
     this.defaultValue,
+    this.clearInput,
   });
 
   @override
@@ -29,10 +31,15 @@ class OpenTextInput extends StatefulWidget {
 class _OpenTextInputState extends State<OpenTextInput> {
   late TextEditingController _controller;
 
+  void _clearInput() {
+    _controller.clear(); // 清空输入框
+  }
+
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.defaultValue); // 设置默认值
+    widget.clearInput = _clearInput; // 将清除功能分配给回调
   }
 
   @override
