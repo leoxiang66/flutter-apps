@@ -8,8 +8,8 @@ class OpenTextInput extends StatefulWidget {
   final int minLines;
   final int? maxLines;
   final String placeholder;
-  final String? defaultValue;
-  final ValueNotifier<String>? clearNotifier;
+  final String defaultValue;
+  final TextEditingController? controller;
 
   OpenTextInput({
     Key? key,
@@ -17,11 +17,11 @@ class OpenTextInput extends StatefulWidget {
     required this.onChanged,
     required this.label,
     required this.width,
+    this.controller,
     this.minLines = 1,
     this.maxLines = 1,
     this.placeholder = '',
-    this.defaultValue,
-    this.clearNotifier,
+    this.defaultValue = "",
   }) : super(key: key);
 
   @override
@@ -36,23 +36,18 @@ class OpenTextInputState extends State<OpenTextInput> {
   }
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    _controller =
+        widget.controller ?? TextEditingController(text: widget.defaultValue);
   }
 
   @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController(text: widget.defaultValue); // 设置默认值
-    widget.clearNotifier?.addListener(() {
-      if (widget.clearNotifier?.value == "") {
-        print("输入库已清除");
-        clearInput();
-      } else {
-        print("Notifier value: ${widget.clearNotifier?.value}");
-      }
-    });
+  void dispose() {
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -69,8 +64,6 @@ class OpenTextInputState extends State<OpenTextInput> {
           border: const OutlineInputBorder(),
         ),
         onChanged: (value) {
-          widget.clearNotifier?.value = value;
-          widget.clearNotifier?.notifyListeners();
           widget.onChanged(value);
         },
         onSubmitted: (value) {
