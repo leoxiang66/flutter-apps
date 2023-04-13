@@ -1,5 +1,26 @@
 import 'package:flutter/material.dart';
 
+class OpenTextInputProvider extends InheritedWidget {
+  final TextEditingController controller;
+
+  OpenTextInputProvider(
+      {Key? key, required this.controller, required Widget child})
+      : super(key: key, child: child);
+
+  static OpenTextInputProvider? of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<OpenTextInputProvider>();
+  }
+
+  @override
+  bool updateShouldNotify(OpenTextInputProvider oldWidget) {
+    return controller != oldWidget.controller;
+  }
+}
+
+
+
+
 class OpenTextInput extends StatefulWidget {
   final void Function(String) onSubmitted;
   final void Function(String) onChanged;
@@ -29,25 +50,16 @@ class OpenTextInput extends StatefulWidget {
 }
 
 class OpenTextInputState extends State<OpenTextInput> {
-  late TextEditingController _controller;
+  TextEditingController? _controller;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _controller = OpenTextInputProvider.of(context)?.controller;
+  }
 
   void clearInput() {
-    _controller.clear(); // 清空输入框
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _controller =
-        widget.controller ?? TextEditingController(text: widget.defaultValue);
-  }
-
-  @override
-  void dispose() {
-    if (widget.controller == null) {
-      _controller.dispose();
-    }
-    super.dispose();
+    _controller?.clear(); // 清空输入框
   }
 
   @override
