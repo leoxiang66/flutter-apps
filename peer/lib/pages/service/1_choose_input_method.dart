@@ -40,13 +40,13 @@ class ChooseIPMPage extends StatelessWidget {
             context, 'Essay content saved.', 'dismiss', () {});
       },
       onChanged: (text) {
-        // if (text == '') {
-        //   essayState.setPhotoInput();
-        // } else {
-        //   essayState.setTextInput();
-        // }
+        if (text == '') {
+          essayState.setPhotoInput();
+        } else {
+          essayState.setTextInput();
+        }
 
-        // essayState.setEssayContent(text);
+        essayState.setEssayContent(text);
       },
       label: '',
       width: content_max_width,
