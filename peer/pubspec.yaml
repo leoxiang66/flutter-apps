@@ -31,7 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   font_awesome_flutter: ^10.4.0
-  open_widgets: ^0.9.6
+  open_widgets: ^0.9.7
   provider: ^6.0.5
 
 

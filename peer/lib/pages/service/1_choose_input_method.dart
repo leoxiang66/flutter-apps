@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:open_widgets/input/text_input.dart' show OpenTextInput;
+import 'package:open_widgets/input/text_input.dart';
 import 'package:open_widgets/input/dropdown.dart' show OpenDropdown;
 import 'package:open_widgets/notification/snackbar.dart';
 import 'package:peer/states/essay.dart' show EssayState;
@@ -24,8 +24,9 @@ class ChooseIPMPage extends StatelessWidget {
     );
     var content_max_width = screenSize.width * 0.8;
     var essayState = context.watch<EssayState>();
-
+    GlobalKey<_OpenTextInputState> essayContentKey = GlobalKey();
     var essayContentInput = OpenTextInput(
+                                key: essayContentKey,
                                 defaultValue: essayState.essayContent,
                                 minLines: 20,
                                 maxLines: null,
