@@ -69,8 +69,8 @@ class OpenTextInputState extends State<OpenTextInput> {
           border: const OutlineInputBorder(),
         ),
         onChanged: (value) {
-          widget.onChanged(value);
           widget.clearNotifier?.value = value;
+          widget.onChanged(value);
         },
         onSubmitted: (value) {
           widget.onSubmitted(value);
