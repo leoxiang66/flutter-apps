@@ -5,13 +5,16 @@ class OpenDropdown extends StatefulWidget {
   final List<String> items;
   final void Function(String?) onChanged;
   final double width;
-  // final double height;
+  final String? value;
 
-  const OpenDropdown(
-      {super.key,
-      required this.hint,
-      required this.items,
-      required this.onChanged, required this.width,});
+  const OpenDropdown({
+    Key? key,
+    required this.hint,
+    required this.items,
+    required this.onChanged,
+    required this.width,
+    this.value,
+  }) : super(key: key);
 
   @override
   _OpenDropdownState createState() => _OpenDropdownState();
@@ -19,6 +22,12 @@ class OpenDropdown extends StatefulWidget {
 
 class _OpenDropdownState extends State<OpenDropdown> {
   String? _selectedValue;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedValue = widget.value;
+  }
 
   @override
   Widget build(BuildContext context) {
