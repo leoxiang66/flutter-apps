@@ -5,14 +5,27 @@ class EssayState extends ChangeNotifier {
   String? _essayType = '';
   String? _studyYear = '';
   String _essayContent = '';
+  bool _textInput = false;
 
   String get essayTitle => _essayTitle;
   String? get essayType => _essayType;
   String? get studyYear => _studyYear;
   String get essayContent => _essayContent;
+  bool get textInput => _textInput;
+
+  void setTextInput() {
+    _textInput = true;
+    notifyListeners();
+  }
+
+  void setPhotoInput() {
+    _textInput = false;
+    notifyListeners();
+  }
 
   void setEssayContent(String content) {
     _essayContent = content;
+    notifyListeners();
   }
 
   void setEssayTitle(String title) {
@@ -31,10 +44,7 @@ class EssayState extends ChangeNotifier {
   }
 
   bool essay_info_complete() {
-    return _essayTitle != '' &&
-        _essayType != '' &&
-        _studyYear != '' &&
-        _essayContent != '';
+    return _essayTitle != '' && _essayType != '' && _studyYear != '';
   }
 
   void setDefault() {

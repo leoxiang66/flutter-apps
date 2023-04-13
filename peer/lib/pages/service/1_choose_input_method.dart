@@ -4,8 +4,6 @@ import 'package:open_widgets/input/text_input.dart' show OpenTextInput;
 import 'package:open_widgets/input/dropdown.dart' show OpenDropdown;
 import 'package:open_widgets/notification/snackbar.dart';
 import 'package:peer/states/essay.dart' show EssayState;
-import '../../states/utils.dart' show essay_info_complete;
-import '../../states/utils.dart';
 import '../base.dart' show BasePage;
 
 class ChooseIPMPage extends StatelessWidget {
@@ -68,7 +66,6 @@ class ChooseIPMPage extends StatelessWidget {
                           hint: 'Essay Type',
                           items: ['o1'],
                           onChanged: (text) {
-                            print(text);
                             essayState.setEssayType(text);
                             show_snackbar_notification(
                                 context, 'Essay type saved.', 'dismiss', () {});
@@ -79,7 +76,6 @@ class ChooseIPMPage extends StatelessWidget {
                           hint: 'Study Year',
                           items: ['o1'],
                           onChanged: (text) {
-                            print(text);
                             essayState.setStudyYear(text);
                             show_snackbar_notification(
                                 context, 'Study year saved.', 'dismiss', () {});
@@ -89,19 +85,77 @@ class ChooseIPMPage extends StatelessWidget {
                   ),
                 ),
                 sizedBox,
-                OpenTextInput(
-                  minLines: 20,
-                  maxLines: null,
-                    onSubmitted: (text) {
-                      essayState.setEssayContent(text);
-                      show_snackbar_notification(
-                          context, 'Essay content saved.', 'dismiss', () {});
-                    },
-                    onChanged: (text) {
-                      essayState.setEssayContent(text);
-                    },
-                    label: '',
-                    width: content_max_width)
+                essayState.essay_info_complete()
+                    ? Column(
+                      children: [
+                        Stack(
+                            children: [
+                              OpenTextInput(
+                                minLines: 20,
+                                maxLines: null,
+                                placeholder: "Enter your essay here...",
+                                onSubmitted: (text) {
+                                  essayState.setEssayContent(text);
+                                  show_snackbar_notification(context,
+                                      'Essay content saved.', 'dismiss', () {});
+                                },
+                                onChanged: (text) {
+                                  if (text == '') {
+                                    essayState.setPhotoInput();
+                                  } else {
+                                    essayState.setTextInput();
+                                  }
+
+                                  essayState.setEssayContent(text);
+                                },
+                                label: '',
+                                width: content_max_width,
+                              ),
+                              Positioned(
+                                bottom: 15, // 调整按钮距离底部的位置
+                                right: 15, // 调整按钮距离右侧的位置
+                                child: Opacity(
+                                  opacity: essayState.textInput ? 0.0 : 1.0,
+                                  child: Tooltip(
+                                    message: !essayState.textInput
+                                        ? "Upload photos instead"
+                                        : '',
+                                    child: IconButton(
+                                      icon: Icon(Icons.photo_album), // 将此处替换为您想要的图标
+                                      onPressed: () {
+                                        // 在这里处理图像上传或拍照操作
+                                        if (!essayState.textInput) {
+                                          // todo
+                                          
+                                        }
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25.0,vertical: 20),
+                            child: Row(
+                              mainAxisAlignment:MainAxisAlignment.end,
+                              children: [
+                                Tooltip(
+                                message: "Clear",
+                                child: IconButton(onPressed: (){}, icon: Icon(Icons.clear))),
+
+                                Tooltip(
+                                message: "Submit",
+                                  child: IconButton(
+                                      onPressed: () {}, icon: Icon(Icons.done_all)),
+                                )
+                              ],
+                            ),
+                          )
+                      ],
+                    )
+                    : const SizedBox(),
+                    
               ],
             ),
           ),
