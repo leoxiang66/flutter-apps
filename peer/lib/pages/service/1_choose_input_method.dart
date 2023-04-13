@@ -100,7 +100,7 @@ class ChooseIPMPage extends StatelessWidget {
                     onChanged: (text) {
                       essayState.setEssayContent(text);
                     },
-                    label: 'Content of  Essay',
+                    label: '',
                     width: content_max_width)
               ],
             ),
