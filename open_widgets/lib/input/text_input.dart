@@ -7,16 +7,18 @@ class OpenTextInput extends StatefulWidget {
   final double width;
   final int minLines;
   final int? maxLines;
+  final String placeholder;
 
-  const OpenTextInput(
-      {super.key,
-      required this.onSubmitted,
-      required this.onChanged,
-      required this.label,
-      required this.width,
-      this.minLines = 1,
-      this.maxLines = 1,
-      });
+  const OpenTextInput({
+    super.key,
+    required this.onSubmitted,
+    required this.onChanged,
+    required this.label,
+    required this.width,
+    this.minLines = 1,
+    this.maxLines = 1,
+    this.placeholder = '',
+  });
 
   @override
   _OpenTextInputState createState() => _OpenTextInputState();
@@ -40,6 +42,7 @@ class _OpenTextInputState extends State<OpenTextInput> {
         maxLines: widget.maxLines,
         controller: _controller,
         decoration: InputDecoration(
+          hintText: widget.placeholder,
           labelText: widget.label,
           border: const OutlineInputBorder(),
         ),
