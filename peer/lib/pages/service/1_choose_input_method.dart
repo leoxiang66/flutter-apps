@@ -25,9 +25,9 @@ class ChooseIPMPage extends StatelessWidget {
     var content_max_width = screenSize.width * 0.8;
     var essayState = context.watch<EssayState>();
     final ValueNotifier<String> clearNotifier = ValueNotifier("None");
-    clearNotifier.addListener(() {
-      print('Value changeds');
-    });
+    // clearNotifier.addListener(() {
+    //   print('Value changeds');
+    // });
     var essayContentInput = OpenTextInput(
       clearNotifier: clearNotifier,
       // defaultValue: essayState.essayContent,
@@ -40,13 +40,13 @@ class ChooseIPMPage extends StatelessWidget {
             context, 'Essay content saved.', 'dismiss', () {});
       },
       onChanged: (text) {
-        if (text == '') {
-          essayState.setPhotoInput();
-        } else {
-          essayState.setTextInput();
-        }
+        // if (text == '') {
+        //   essayState.setPhotoInput();
+        // } else {
+        //   essayState.setTextInput();
+        // }
 
-        essayState.setEssayContent(text);
+        // essayState.setEssayContent(text);
       },
       label: '',
       width: content_max_width,
