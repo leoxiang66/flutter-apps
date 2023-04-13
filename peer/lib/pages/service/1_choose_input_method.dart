@@ -24,7 +24,7 @@ class ChooseIPMPage extends StatelessWidget {
     );
     var content_max_width = screenSize.width * 0.8;
     var essayState = context.watch<EssayState>();
-    GlobalKey<_OpenTextInputState> essayContentKey = GlobalKey();
+    GlobalKey<OpenTextInputState> essayContentKey = GlobalKey();
     var essayContentInput = OpenTextInput(
                                 key: essayContentKey,
                                 defaultValue: essayState.essayContent,
