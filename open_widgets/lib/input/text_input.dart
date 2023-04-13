@@ -5,15 +5,18 @@ class OpenTextInput extends StatefulWidget {
   final void Function(String) onChanged;
   final String label;
   final double width;
-  final int minLines = 1;
-  final int? maxLines = 1;
+  final int minLines;
+  final int? maxLines;
 
   const OpenTextInput(
       {super.key,
       required this.onSubmitted,
       required this.onChanged,
       required this.label,
-      required this.width});
+      required this.width,
+      this.minLines = 1,
+      this.maxLines = 1,
+      });
 
   @override
   _OpenTextInputState createState() => _OpenTextInputState();
