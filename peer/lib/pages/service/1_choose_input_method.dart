@@ -11,7 +11,7 @@ import '../base.dart' show BasePage;
 class ChooseIPMPage extends StatelessWidget {
   const ChooseIPMPage({
     Key? key,
-    this.naviBarIndex = 0,
+    this.naviBarIndex = -1,
   }) : super(key: key);
 
   final int naviBarIndex;
