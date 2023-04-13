@@ -90,6 +90,8 @@ class ChooseIPMPage extends StatelessWidget {
                 ),
                 sizedBox,
                 OpenTextInput(
+                  minLines: 20,
+                  maxLines: null,
                     onSubmitted: (text) {
                       essayState.setEssayContent(text);
                       show_snackbar_notification(
