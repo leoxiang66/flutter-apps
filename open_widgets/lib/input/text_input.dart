@@ -49,6 +49,8 @@ class OpenTextInputState extends State<OpenTextInput> {
       if (widget.clearNotifier?.value == "") {
         print("输入库已清除");
         clearInput();
+      } else {
+        print("Notifier value: ${widget.clearNotifier?.value}");
       }
     });
   }
@@ -68,6 +70,7 @@ class OpenTextInputState extends State<OpenTextInput> {
         ),
         onChanged: (value) {
           widget.onChanged(value);
+          widget.clearNotifier?.value = value;
         },
         onSubmitted: (value) {
           widget.onSubmitted(value);
