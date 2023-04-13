@@ -70,6 +70,7 @@ class OpenTextInputState extends State<OpenTextInput> {
         ),
         onChanged: (value) {
           widget.clearNotifier?.value = value;
+          widget.clearNotifier?.notifyListeners();
           widget.onChanged(value);
         },
         onSubmitted: (value) {
