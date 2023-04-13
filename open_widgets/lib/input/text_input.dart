@@ -12,7 +12,7 @@ class OpenTextInput extends StatefulWidget {
   void Function()? clearInput;
 
   OpenTextInput({
-    super.key,
+    Key? key,
     required this.onSubmitted,
     required this.onChanged,
     required this.label,
@@ -22,7 +22,7 @@ class OpenTextInput extends StatefulWidget {
     this.placeholder = '',
     this.defaultValue,
     this.clearInput,
-  });
+  }) : super(key: key);
 
   @override
   _OpenTextInputState createState() => _OpenTextInputState();
