@@ -47,6 +47,7 @@ class OpenTextInputState extends State<OpenTextInput> {
     _controller = TextEditingController(text: widget.defaultValue); // 设置默认值
     widget.clearNotifier?.addListener(() {
       if (widget.clearNotifier?.value == "") {
+        print("输入库已清除");
         clearInput();
       }
     });
@@ -67,11 +68,9 @@ class OpenTextInputState extends State<OpenTextInput> {
         ),
         onChanged: (value) {
           widget.onChanged(value);
-          widget.clearNotifier?.value = value;
         },
         onSubmitted: (value) {
           widget.onSubmitted(value);
-          widget.clearNotifier?.value = value;
         },
       ),
     );
