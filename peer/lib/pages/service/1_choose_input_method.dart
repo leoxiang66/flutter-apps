@@ -27,7 +27,6 @@ class ChooseIPMPage extends StatelessWidget {
     var content_max_width = screenSize.width * 0.8;
     var essayState = context.watch<EssayState>();
 
-
     return BasePage(
       naviBarIndex: naviBarIndex,
       singleChildScrollView: SingleChildScrollView(
@@ -51,12 +50,13 @@ class ChooseIPMPage extends StatelessWidget {
                 sizedBox,
                 OpenTextInput(
                     onSubmitted: (text) {
-                      print(text);
                       essayState.setEssayTitle(text);
                       show_snackbar_notification(
                           context, 'Essay title saved.', 'dismiss', () {});
                     },
-                    onChanged: (text) {},
+                    onChanged: (text) {
+                      essayState.setEssayTitle(text);
+                    },
                     label: 'Title of  Essay',
                     width: content_max_width),
                 sizedBox,
@@ -89,43 +89,17 @@ class ChooseIPMPage extends StatelessWidget {
                   ),
                 ),
                 sizedBox,
-                essayState.essay_info_complete()
-                    ? SizedBox(
-                        width: content_max_width,
-                        child: Column(
-                          children: [
-                            sizedBox,
-                            Text(
-                              "How do you want to upload your essay?",
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            sizedBox,
-                            Row(
-                              children: [
-                                ElevatedButton(
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                                Colors.lightBlueAccent)),
-                                    onPressed: () {
-                                      print('manually enter essay...');
-                                    },
-                                    child: Text("Manually Enter")),
-                                Expanded(child: SizedBox()),
-                                ElevatedButton(
-                                    style: ButtonStyle(
-                                        backgroundColor:
-                                            MaterialStateProperty.all<Color>(
-                                                Colors.lightBlueAccent)),
-                                    onPressed: () {
-                                      print('upload photo...');
-                                    },
-                                    child: Text("Upload photo")),
-                              ],
-                            )
-                          ],
-                        ))
-                    : SizedBox()
+                OpenTextInput(
+                    onSubmitted: (text) {
+                      essayState.setEssayContent(text);
+                      show_snackbar_notification(
+                          context, 'Essay content saved.', 'dismiss', () {});
+                    },
+                    onChanged: (text) {
+                      essayState.setEssayContent(text);
+                    },
+                    label: 'Content of  Essay',
+                    width: content_max_width)
               ],
             ),
           ),
