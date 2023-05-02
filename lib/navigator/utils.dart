@@ -3,18 +3,34 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import '../logger.dart' show logger;
 
-void go_to_internal_page(BuildContext context, Widget page) {
+void go_to_internal_page(BuildContext context, Widget page, {bool pushonly = false}) {
+  if (pushonly){
+  Navigator.push(
+      context,
+      PageRouteBuilder(
+        pageBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
+          return page;
+        },
+        transitionDuration: const Duration(milliseconds: 0),
+        reverseTransitionDuration: const Duration(milliseconds: 0),
+      ),
+    );
+  }else{
   Navigator.pushReplacement(
-    context,
-    PageRouteBuilder(
-      pageBuilder: (BuildContext context, Animation<double> animation,
-          Animation<double> secondaryAnimation) {
-        return page;
-      },
-      transitionDuration: Duration(milliseconds: 0),
-      reverseTransitionDuration: Duration(milliseconds: 0),
-    ),
-  );
+      context,
+      PageRouteBuilder(
+        pageBuilder: (BuildContext context, Animation<double> animation,
+            Animation<double> secondaryAnimation) {
+          return page;
+        },
+        transitionDuration: const Duration(milliseconds: 0),
+        reverseTransitionDuration: const Duration(milliseconds: 0),
+      ),
+    );
+  }
+
+  
 }
 
 Future<void> go_to_url(String url) async {
