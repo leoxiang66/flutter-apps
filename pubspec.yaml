@@ -17,6 +17,7 @@ dependencies:
   file: ^6.1.2
   path: ^1.8.1
   permission_handler: ^10.2.0
+  device_info_plus: ^8.0.0
 
 dev_dependencies:
   flutter_test:
