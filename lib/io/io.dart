@@ -1,17 +1,13 @@
 import 'dart:io';
 import 'package:toml/toml.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 
 void writeTOMLSync(Map<String, dynamic> config, String TOMLPath) {
   String toml = TomlDocument.fromMap(config).toString();
   File(TOMLPath).writeAsStringSync(toml);
 }
 
-Future<void> createConfigTomlIfNotExists({String filepath = 'config.toml'}) async {
-  final directory = await getApplicationDocumentsDirectory();
-  String newfilepath = p.join(directory.path, filepath);
-  File configFile = File(newfilepath);
+void createConfigTomlIfNotExists({String filepath = 'config.toml'}) {
+  File configFile = File(filepath);
   if (!configFile.existsSync()) {
     configFile.createSync();
   }
