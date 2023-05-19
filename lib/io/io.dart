@@ -8,7 +8,7 @@ void writeTOMLSync(Map<String, dynamic> config, String TOMLPath) {
   File(TOMLPath).writeAsStringSync(toml);
 }
 
-void createConfigTomlIfNotExists({String filepath = 'config.toml'}) async {
+Future<void> createConfigTomlIfNotExists({String filepath = 'config.toml'}) async {
   final directory = await getApplicationDocumentsDirectory();
   String newfilepath = p.join(directory.path, filepath);
   File configFile = File(newfilepath);
