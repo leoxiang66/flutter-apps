@@ -1,6 +1,6 @@
 name: open_widgets
 description: A package that implements widgets for mobile and web.
-version: 0.13.2
+version: 0.14.0
 homepage:
 
 environment:
