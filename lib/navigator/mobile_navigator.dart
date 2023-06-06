@@ -71,12 +71,7 @@ class _OpenMobileNavigatorState extends State<OpenMobileNavigator> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  item.icon,
-                  color: currentIndex == index
-                      ? widget.primaryColor
-                      : widget.inactiveColor,
-                ),
+                item.icon,
                 Text(
                   item.title,
                   style: TextStyle(
@@ -96,7 +91,7 @@ class _OpenMobileNavigatorState extends State<OpenMobileNavigator> {
 
 /// Represents an item for the [OpenMobileNavigator] widget.
 class OpenMobileNavigatorItem {
-  final IconData icon;
+  final Widget icon;
   final String title;
   final VoidCallback onTap;
 
@@ -104,3 +99,6 @@ class OpenMobileNavigatorItem {
   OpenMobileNavigatorItem(
       {required this.onTap, required this.icon, required this.title});
 }
+
+
+
