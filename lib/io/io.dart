@@ -13,6 +13,13 @@ void createConfigTomlIfNotExists({String filepath = 'config.toml'}) {
   }
 }
 
+void deleteConfigFile({String filepath = 'config.toml'}) {
+  File configFile = File(filepath);
+  if (configFile.existsSync()) {
+    configFile.deleteSync();
+  }
+}
+
 Future<void> writeTOMLAsync(
     Map<String, dynamic> config, String TOMLPath) async {
   String toml = TomlDocument.fromMap(config).toString();
