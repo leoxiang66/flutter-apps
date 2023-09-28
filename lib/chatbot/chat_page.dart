@@ -16,24 +16,44 @@ class _OpenChatPageState extends State<OpenChatPage> {
   final List<OpenChatMessage> _messages = [];
   final FocusNode _focusNode = FocusNode(); // 添加FocusNode实例
   final ScrollController _scrollController = ScrollController();
-  bool isWaitingForResponse = true;
+  var isWaitingForResponse = true;
+  var three_dots_ing = true;
 
   Future<String> _3dots() async {
-    int typingDelay = 250; // 每个字符的延迟时间，单位为毫秒
+    int typingDelay = 150; // 每个字符的延迟时间，单位为毫秒
+    three_dots_ing = true;
 
     StringBuffer stringBuffer = StringBuffer();
     while (isWaitingForResponse) {
-      String response = stringBuffer.toString();
-      if (response == '....') {
-        stringBuffer.clear();
-      } else {
+      for (var i = 0; i < 3; i++) {
         await Future.delayed(Duration(milliseconds: typingDelay)); // 等待延迟时间
         stringBuffer.write('.');
+
+        {
+          OpenChatMessage botMessage = OpenChatMessage(
+            text: stringBuffer.toString(),
+            sender: "bot",
+            isImage: false,
+          );
+
+          setState(() {
+            if (_messages.isNotEmpty &&
+                _messages.last.sender == "bot" &&
+                !_messages.last.isImage) {
+              _messages.removeLast(); // 移除上一个botMessage
+            }
+            _messages.add(botMessage); // 添加新的botMessage
+            scroll_bottom();
+          });
+        }
       }
 
+      // after ... dots: clean
       {
-        OpenChatMessage botMessage = OpenChatMessage(
-          text: stringBuffer.toString(),
+        await Future.delayed(Duration(milliseconds: typingDelay)); // 等待延迟时间
+        stringBuffer.clear();
+        OpenChatMessage botMessage = const OpenChatMessage(
+          text: "",
           sender: "bot",
           isImage: false,
         );
@@ -49,6 +69,10 @@ class _OpenChatPageState extends State<OpenChatPage> {
         });
       }
     }
+
+    // after while:
+    three_dots_ing = false;
+
     return '';
   }
 
@@ -79,14 +103,16 @@ class _OpenChatPageState extends State<OpenChatPage> {
       insertNewData(response, isImage: true);
     } else {
       _3dots();
-      String response = await widget.reply_func(message.text).whenComplete(() {
+      String response =
+          await widget.reply_func(message.text).whenComplete(() async {
         isWaitingForResponse = false;
-        // setState(() {
-        //   _messages.removeLast();
-        // });
-      });
 
+        while (three_dots_ing) {
+          await Future.delayed(const Duration(seconds: 1));
+        }
+      });
       insertNewData(response);
+      three_dots_ing = true;
     }
   }
 
@@ -170,39 +196,44 @@ class _OpenChatPageState extends State<OpenChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text("ChatGPT Demo"),
-          centerTitle: true, // 将标题居中
-          backgroundColor:
-              const Color.fromARGB(100, 212, 250, 226), // 设置背景颜色为白色
-          foregroundColor: Colors.black, // 设置前景色为黑色，以确保标题在白色背景上可见
-        ),
-        backgroundColor: Colors.white, // 设置背景颜色为白色，或者您想要的其他颜色
-        body: SafeArea(
-          child: Column(
-            children: [
-              Flexible(
-                  child: ListView.builder(
-                controller: _scrollController, // 添加ScrollController
-                reverse: false,
-                // padding: const EdgeInsets.all(10),
-                itemCount: _messages.length,
-                itemBuilder: (context, index) {
-                  return _messages[index];
-                },
-              )),
-              const Divider(
-                height: 1.0,
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Scaffold(
+            appBar: AppBar(
+              title: const Text("ChatGPT Demo"),
+              centerTitle: true, // 将标题居中
+              backgroundColor:
+                  const Color.fromARGB(100, 212, 250, 226), // 设置背景颜色为白色
+              foregroundColor: Colors.black, // 设置前景色为黑色，以确保标题在白色背景上可见
+            ),
+            backgroundColor: Colors.white, // 设置背景颜色为白色，或者您想要的其他颜色
+            body: SafeArea(
+              child: Column(
+                children: [
+                  Flexible(
+                      child: ListView.builder(
+                    controller: _scrollController, // 添加ScrollController
+                    reverse: false,
+                    // padding: const EdgeInsets.all(10),
+                    itemCount: _messages.length,
+                    itemBuilder: (context, index) {
+                      return _messages[index];
+                    },
+                  )),
+                  const Divider(
+                    height: 1.0,
+                  ),
+                  Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                    ),
+                    child: _buildTextComposer(),
+                  )
+                ],
               ),
-              Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                ),
-                child: _buildTextComposer(),
-              )
-            ],
-          ),
-        ));
+            )),
+      ),
+    );
   }
 }
