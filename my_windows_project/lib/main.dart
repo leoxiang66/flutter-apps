@@ -1,7 +1,14 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:open_widgets/navigator/utils.dart';
 import 'package:window_manager/window_manager.dart';
-import 'package:open_widgets/navigator/web_navigator.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'package:open_widgets/status/spinner.dart';
+import 'package:file_selector/file_selector.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -93,32 +100,33 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  // 计算逻辑
-  double calculateSolarGeneration() {
-    double sunlightIntensity = double.tryParse(_sunlightIntensity) ?? 0.0;
-    double tiltAngle = double.tryParse(_tiltAngle) ?? 0.0;
-    double panelOrientation = double.tryParse(_panelOrientation) ?? 0.0;
+  double calculateSolarGeneration(
+      double sunlightIntensity, double tiltAngle, double panelOrientation) {
     return sunlightIntensity *
         1.5 *
         (tiltAngle / 45) *
         (panelOrientation / 180);
   }
 
-  double calculateWindGeneration() {
-    double windSpeed = double.tryParse(_windSpeed) ?? 0.0;
+  double calculateWindGeneration(double windSpeed) {
     return windSpeed * 1.2;
   }
 
-  double calculateGridLoad() {
-    double temperature = double.tryParse(_temperature) ?? 0.0;
+  double calculateGridLoad(double temperature) {
     return 500 + (temperature - 20) * 100;
   }
 
-  String calculateLoadBalancingStrategy() {
-    double solarGeneration = calculateSolarGeneration();
-    double windGeneration = calculateWindGeneration();
+  String calculateLoadBalancingStrategy(
+      double sunlightIntensity,
+      double tiltAngle,
+      double panelOrientation,
+      double windSpeed,
+      double temperature) {
+    double solarGeneration = calculateSolarGeneration(
+        sunlightIntensity, tiltAngle, panelOrientation);
+    double windGeneration = calculateWindGeneration(windSpeed);
     double totalGeneration = solarGeneration + windGeneration;
-    double predictedLoad = calculateGridLoad();
+    double predictedLoad = calculateGridLoad(temperature);
 
     if (totalGeneration < predictedLoad) {
       double deficit = predictedLoad - totalGeneration;
@@ -130,35 +138,42 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildResult() {
-    double solarGeneration = calculateSolarGeneration();
-    double windGeneration = calculateWindGeneration();
-    double predictedLoad = calculateGridLoad();
-    String strategy = calculateLoadBalancingStrategy();
+    double solarGeneration = calculateSolarGeneration(
+        double.parse(_sunlightIntensity),
+        double.parse(_tiltAngle),
+        double.parse(_panelOrientation));
+    double windGeneration = calculateWindGeneration(double.parse(_windSpeed));
+    double predictedLoad = calculateGridLoad(double.parse(_temperature));
+    String strategy = calculateLoadBalancingStrategy(
+        double.parse(_sunlightIntensity),
+        double.parse(_tiltAngle),
+        double.parse(_panelOrientation),
+        double.parse(_windSpeed),
+        double.parse(_temperature));
 
     return Scaffold(
         body: Container(
             child: Padding(
-              padding: const EdgeInsets.all(100.0),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-            
-                    Text("太阳能发电量: ${solarGeneration.toStringAsFixed(2)} 单位"),
-                    Text("风能发电量: ${windGeneration.toStringAsFixed(2)} 单位"),
-                    Text("预测负荷: ${predictedLoad.toStringAsFixed(2)} 单位"),
-                    Text("调峰策略: $strategy"),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    ElevatedButton(
+      padding: const EdgeInsets.all(100.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("太阳能发电量: ${solarGeneration.toStringAsFixed(2)} 单位"),
+          Text("风能发电量: ${windGeneration.toStringAsFixed(2)} 单位"),
+          Text("预测负荷: ${predictedLoad.toStringAsFixed(2)} 单位"),
+          Text("调峰策略: $strategy"),
+          SizedBox(
+            height: 20,
+          ),
+          ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
               },
               child: Text("返回"))
-                  ],
-                ),
-            )));
+        ],
+      ),
+    )));
   }
 
   @override
@@ -217,16 +232,78 @@ class _MyHomePageState extends State<MyHomePage> {
                     SizedBox(
                       height: 20,
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // 在这里，您可以使用_formKey.currentState.validate()来校验输入的合法性（如果需要）
-                        // 并使用上面的状态变量（_sunlightIntensity, _windSpeed, _temperature）进行后续处理
-                        // 例如调用预测函数等
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            // 在这里，您可以使用_formKey.currentState.validate()来校验输入的合法性（如果需要）
+                            // 并使用上面的状态变量（_sunlightIntensity, _windSpeed, _temperature）进行后续处理
+                            // 例如调用预测函数等
 
-                        go_to_internal_page(context, _buildResult(),
-                            pushonly: true);
-                      },
-                      child: const Text('提交'),
+                            go_to_internal_page(context, _buildResult(),
+                                pushonly: true);
+                          },
+                          child: const Text('提交'),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            FilePickerResult? result =
+                                await FilePicker.platform.pickFiles(
+                              type: FileType.custom,
+                              allowedExtensions: [
+                                'csv',
+                              ],
+                            );
+
+                            if (result != null) {
+                              // 如果用户选择了文件，这里可以获取文件路径
+                              PlatformFile file = result.files.first;
+
+                              go_to_internal_page(
+                                  context,
+                                  Scaffold(
+                                    body: Container(
+                                      child: Center(
+                                        child: Spinner(
+                                            work: processCsvFile(file),
+                                            onFinished: (content) {
+                                              return Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  ElevatedButton(
+                                                      onPressed: () {
+                                                        saveFileWithUserSelectedPath(
+                                                            content);
+                                                      },
+                                                      child: Text("下载结果")),
+                                                  SizedBox(
+                                                    width: 20,
+                                                  ),
+                                                  ElevatedButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                      child: Text("返回")),
+                                                ],
+                                              );
+                                            }),
+                                      ),
+                                    ),
+                                  ),
+                                  pushonly: true);
+                            } else {
+                              // 用户没有选择任何文件
+                              throw Exception('No file selected.'); // 抛出一个异常
+                            }
+                          },
+                          child: const Text('上传文件批量处理'),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -236,5 +313,175 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  Future<String> processCsvFile(PlatformFile file) async {
+    try {
+      // 将文件路径转换为File对象
+      await Future.delayed(Duration(seconds: 2));
+
+      var csvFile = File(file.path!);
+      // 异步读取文件内容
+      var lines = await csvFile.readAsLines();
+
+      String result = lines[0];
+
+      // 遍历除标题行外的每一行
+      for (var line in lines.skip(1)) {
+        // 如果第一行是列名，跳过第一行
+        // 将每一行按逗号分割
+        var values = line.split(',');
+
+        try {
+          double gzqd = tryParse(values[0]);
+          double fs = tryParse(values[1]);
+          double wd = tryParse(values[2]);
+          double angle = tryParse(values[3]);
+          double orientation = tryParse(values[4]);
+          double solar = calculateSolarGeneration(gzqd, angle, orientation);
+          double wind = calculateWindGeneration(fs);
+          double fuhe = calculateGridLoad(wd);
+          String strategy =
+              calculateLoadBalancingStrategy(gzqd, angle, orientation, fs, wd);
+
+          result += '\n$gzqd,$fs,$wd,$angle,$orientation,$solar,$wind,$fuhe,$strategy';
+        } catch (e) {}
+      }
+
+      // 返回求和结果
+      return result;
+    } catch (e) {
+      // 处理可能的异常
+      return "Error processing file: $e";
+    }
+  }
+
+  Future<String> sleepFiveSeconds() async {
+    // 使用Future.delayed来暂停执行5秒
+    await Future.delayed(Duration(seconds: 5));
+    return "Finished";
+  }
+
+  Future<void> saveFileWithUserSelectedPath(String content) async {
+
+    try{// 建议的文件名
+    const String suggestedName = 'results.csv';
+    // 弹出文件保存对话框
+    final FileSaveLocation? result =
+        await getSaveLocation(suggestedName: suggestedName);
+    if (result == null) {
+      // 用户取消了操作
+      return;
+    }
+
+    // 将字符串内容转换为UTF-8编码的Uint8List
+    final Uint8List fileData = Uint8List.fromList(utf8.encode(content));
+    // 创建XFile对象，此处直接使用字符串内容，明确指定为"text/csv; charset=utf-8" MIME类型
+    final XFile xFile = XFile.fromData(fileData,
+        mimeType: 'text/csv; charset=utf-8', name: suggestedName);
+    // 保存到用户选择的路径
+    await xFile.saveTo(result.path);
+
+    // 提示用户文件已保存或执行后续操作
+    showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              child: Container(
+                height: 200,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TextField(
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: '成功'),
+                      ),
+                      SizedBox(
+                        width: 320.0,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("OK"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF1BC0C5),
+                            foregroundColor: Colors.white,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          });
+
+    
+    
+    
+    }
+
+    catch(e){
+    
+    showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              child: Container(
+                height: 200,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SingleChildScrollView(
+                        child: TextField(
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: e.toString()),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 320.0,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("OK"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF1BC0C5),
+                            foregroundColor: Colors.white,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          });
+
+    
+    }
+    
+  }
+
+  double tryParse(String source, {double defaultValue = 0.0}) {
+    try {
+      return double.parse(source);
+    } catch (e) {
+      return defaultValue;
+    }
   }
 }
