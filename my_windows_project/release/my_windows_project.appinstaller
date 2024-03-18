@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <AppInstaller xmlns="http://schemas.microsoft.com/appx/appinstaller/2018"
+    Uri="C:\Users\xiang\git\flutterapps\my_windows_project\release\my_windows_project.appinstaller" Version="1.0.0.0">
+    <MainPackage Name="company.suite.flutterapp" Version="1.0.0.0"
+      Publisher="CN=Msix Testing, O=Msix Testing Corporation, S=Some-State, C=US"
+      Uri="C:\Users\xiang\git\flutterapps\my_windows_project\release\versions\my_windows_project_1.0.0.0.msix"
+      ProcessorArchitecture="x64" />
+    <UpdateSettings>
+      <OnLaunch HoursBetweenUpdateChecks="0" 
+        UpdateBlocksActivation="true" ShowPrompt="true" />
+        <AutomaticBackgroundTask />
+        </UpdateSettings>
+  </AppInstaller>
