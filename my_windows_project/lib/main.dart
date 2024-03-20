@@ -100,31 +100,73 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  double calculateSolarGeneration(
-      double sunlightIntensity, double tiltAngle, double panelOrientation) {
-    return sunlightIntensity *
-        1.5 *
-        (tiltAngle / 45) *
-        (panelOrientation / 180);
+  double calculateSolarGenerationWithModel(
+      double temperature, // 气温℃
+      double humidity, // 湿度%
+      double atmosphericPressure, // 气压hPa
+      double precipitation, // 降水量mm/h
+      double meridionalWind, // 经向风m/s
+      double zonalWind, // 纬向风m/s
+      double surfaceWindSpeed, // 地面风速m/s
+      double windDirection, // 风向°
+      double surfaceHorizontalRadiation, // 地表水平辐射W/m^2
+      double normalDirectRadiation, // 法向直接辐射W/m^2
+      double scatteredRadiation // 散射辐射W/m^2
+      ) {
+    return temperature * 0.0037 +
+        humidity * -0.0006 +
+        atmosphericPressure * -0.0005 +
+        precipitation * -0.0012 +
+        meridionalWind * -0.0102 +
+        zonalWind * 0.0005 +
+        surfaceWindSpeed * -0.0069 +
+        windDirection * 0.0001 +
+        surfaceHorizontalRadiation * 0.0004 +
+        normalDirectRadiation * -0.0001 +
+        scatteredRadiation * 0.0001 +
+        0.6608; // Intercept
   }
 
-  double calculateWindGeneration(double windSpeed) {
-    return windSpeed * 1.2;
+  double calculateWindGenerationWithModel(
+      double temperature, // 气温℃
+      double humidity, // 湿度%
+      double atmosphericPressure, // 气压hPa
+      double precipitation, // 降水量mm/h
+      double meridionalWind, // 经向风m/s
+      double zonalWind, // 纬向风m/s
+      double surfaceWindSpeed, // 地面风速m/s
+      double windDirection, // 风向°
+      double surfaceHorizontalRadiation, // 地表水平辐射W/m^2
+      double normalDirectRadiation, // 法向直接辐射W/m^2
+      double scatteredRadiation // 散射辐射W/m^2
+      ) {
+    return temperature * -0.0265494436 +
+        humidity * -0.0055894166 +
+        atmosphericPressure * 0.001240531 +
+        precipitation * -0.0726600105 +
+        meridionalWind * 0.155803242 +
+        zonalWind * 0.0221875947 +
+        surfaceWindSpeed * 0.759732919 +
+        windDirection * -0.000540551573 +
+        surfaceHorizontalRadiation * -0.00143191532 +
+        normalDirectRadiation * -0.00051611078 +
+        scatteredRadiation * 0.000475089303 +
+        -0.6102383793813357; // Intercept
   }
 
   double calculateGridLoad(double temperature) {
     return 500 + (temperature - 20) * 100;
   }
 
-  String calculateLoadBalancingStrategy(
+  String calculateLoadBalancingStrategyDisplay(
       double sunlightIntensity,
       double tiltAngle,
       double panelOrientation,
       double windSpeed,
       double temperature) {
-    double solarGeneration = calculateSolarGeneration(
+    double solarGeneration = calculateSolarGeneration_display(
         sunlightIntensity, tiltAngle, panelOrientation);
-    double windGeneration = calculateWindGeneration(windSpeed);
+    double windGeneration = calculateWindGeneration_display(windSpeed);
     double totalGeneration = solarGeneration + windGeneration;
     double predictedLoad = calculateGridLoad(temperature);
 
@@ -137,14 +179,47 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  String calculateLoadBalancingStrategyWithModel(
+      double solarGeneration,
+      double windGeneration,
+      double predictedLoad,
+) {
+  
+    double totalGeneration = solarGeneration + windGeneration;
+    
+
+    if (totalGeneration < predictedLoad) {
+      double deficit = predictedLoad - totalGeneration;
+      return "需要增加发电或减少负荷 ${deficit.toStringAsFixed(2)} 单位来平衡电网。";
+    } else {
+      double surplus = totalGeneration - predictedLoad;
+      return "发电量充足，超出负荷需求 ${surplus.toStringAsFixed(2)} 单位，可以考虑储能或减少发电。";
+    }
+  }
+
+
+
+  double calculateWindGeneration_display(double windSpeed) {
+    return windSpeed * 1.2;
+  }
+
+  double calculateSolarGeneration_display(
+      double sunlightIntensity, double tiltAngle, double panelOrientation) {
+    return sunlightIntensity *
+        1.5 *
+        (tiltAngle / 45) *
+        (panelOrientation / 180);
+  }
+
   Widget _buildResult() {
-    double solarGeneration = calculateSolarGeneration(
+    double solarGeneration = calculateSolarGeneration_display(
         double.parse(_sunlightIntensity),
         double.parse(_tiltAngle),
         double.parse(_panelOrientation));
-    double windGeneration = calculateWindGeneration(double.parse(_windSpeed));
+    double windGeneration =
+        calculateWindGeneration_display(double.parse(_windSpeed));
     double predictedLoad = calculateGridLoad(double.parse(_temperature));
-    String strategy = calculateLoadBalancingStrategy(
+    String strategy = calculateLoadBalancingStrategyDisplay(
         double.parse(_sunlightIntensity),
         double.parse(_tiltAngle),
         double.parse(_panelOrientation),
@@ -333,18 +408,39 @@ class _MyHomePageState extends State<MyHomePage> {
         var values = line.split(',');
 
         try {
-          double gzqd = tryParse(values[0]);
-          double fs = tryParse(values[1]);
-          double wd = tryParse(values[2]);
-          double angle = tryParse(values[3]);
-          double orientation = tryParse(values[4]);
-          double solar = calculateSolarGeneration(gzqd, angle, orientation);
-          double wind = calculateWindGeneration(fs);
-          double fuhe = calculateGridLoad(wd);
-          String strategy =
-              calculateLoadBalancingStrategy(gzqd, angle, orientation, fs, wd);
+          String datetime = values[0];
+          double temperature = tryParse(values[1]);
+          double humidity = tryParse(values[2]);
+          double atmosphericPressure = tryParse(values[3]);
+          double precipitation = tryParse(values[4]);
+          double meridionalWind = tryParse(values[5]);
+          double zonalWind = tryParse(values[6]);
+          double surfaceWindSpeed = tryParse(values[7]);
+          double windDirection = tryParse(values[8]);
+          double surfaceHorizontalRadiation = tryParse(values[9]);
+          double normalDirectRadiation = tryParse(values[10]);
+          double scatteredRadiation = tryParse(values[12]);
 
-          result += '\n$gzqd,$fs,$wd,$angle,$orientation,$solar,$wind,$fuhe,$strategy';
+          double solar = calculateSolarGenerationWithModel(temperature,humidity,atmosphericPressure,precipitation,meridionalWind,zonalWind,surfaceWindSpeed,windDirection,surfaceHorizontalRadiation,normalDirectRadiation,scatteredRadiation);
+          double wind = calculateWindGenerationWithModel(
+              temperature,
+              humidity,
+              atmosphericPressure,
+              precipitation,
+              meridionalWind,
+              zonalWind,
+              surfaceWindSpeed,
+              windDirection,
+              surfaceHorizontalRadiation,
+              normalDirectRadiation,
+              scatteredRadiation);
+
+          double fuhe = calculateGridLoad(temperature);
+          String strategy =
+              calculateLoadBalancingStrategyWithModel(solar,wind,fuhe);
+
+          result +=
+              '\n$datetime,$temperature,$humidity,$atmosphericPressure,$precipitation,$meridionalWind,$zonalWind,$surfaceWindSpeed,$windDirection,$surfaceHorizontalRadiation,$normalDirectRadiation,$scatteredRadiation,$solar,$wind,$fuhe,$strategy';
         } catch (e) {}
       }
 
@@ -363,27 +459,27 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> saveFileWithUserSelectedPath(String content) async {
+    try {
+      // 建议的文件名
+      const String suggestedName = 'results.csv';
+      // 弹出文件保存对话框
+      final FileSaveLocation? result =
+          await getSaveLocation(suggestedName: suggestedName);
+      if (result == null) {
+        // 用户取消了操作
+        return;
+      }
 
-    try{// 建议的文件名
-    const String suggestedName = 'results.csv';
-    // 弹出文件保存对话框
-    final FileSaveLocation? result =
-        await getSaveLocation(suggestedName: suggestedName);
-    if (result == null) {
-      // 用户取消了操作
-      return;
-    }
+      // 将字符串内容转换为UTF-8编码的Uint8List
+      final Uint8List fileData = Uint8List.fromList(utf8.encode(content));
+      // 创建XFile对象，此处直接使用字符串内容，明确指定为"text/csv; charset=utf-8" MIME类型
+      final XFile xFile = XFile.fromData(fileData,
+          mimeType: 'text/csv; charset=utf-8', name: suggestedName);
+      // 保存到用户选择的路径
+      await xFile.saveTo(result.path);
 
-    // 将字符串内容转换为UTF-8编码的Uint8List
-    final Uint8List fileData = Uint8List.fromList(utf8.encode(content));
-    // 创建XFile对象，此处直接使用字符串内容，明确指定为"text/csv; charset=utf-8" MIME类型
-    final XFile xFile = XFile.fromData(fileData,
-        mimeType: 'text/csv; charset=utf-8', name: suggestedName);
-    // 保存到用户选择的路径
-    await xFile.saveTo(result.path);
-
-    // 提示用户文件已保存或执行后续操作
-    showDialog(
+      // 提示用户文件已保存或执行后续操作
+      showDialog(
           context: context,
           builder: (BuildContext context) {
             return Dialog(
@@ -400,8 +496,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: [
                       TextField(
                         decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: '成功'),
+                            border: InputBorder.none, hintText: '成功'),
                       ),
                       SizedBox(
                         width: 320.0,
@@ -422,15 +517,8 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             );
           });
-
-    
-    
-    
-    }
-
-    catch(e){
-    
-    showDialog(
+    } catch (e) {
+      showDialog(
           context: context,
           builder: (BuildContext context) {
             return Dialog(
@@ -448,8 +536,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       SingleChildScrollView(
                         child: TextField(
                           decoration: InputDecoration(
-                              border: InputBorder.none,
-                              hintText: e.toString()),
+                              border: InputBorder.none, hintText: e.toString()),
                         ),
                       ),
                       SizedBox(
@@ -471,10 +558,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             );
           });
-
-    
     }
-    
   }
 
   double tryParse(String source, {double defaultValue = 0.0}) {
